@@ -83,6 +83,9 @@ func ExampleReadmeAdd() {
 }
 
 func TestHappyCase(t *testing.T) {
+	if _, err := NewTree([]int{}, MinFunc{}); err == nil {
+		t.Error("should fail!")
+	}
 	minTree, _ := NewTree([]int{100}, MinFunc{})
 	if x, _ := minTree.RQ(0, 0); x != 100 {
 		t.Fatalf("happy case failed! should return 100; got: %d", x)
@@ -122,6 +125,10 @@ func TestHappyCase(t *testing.T) {
 	tree.Add(-1000, 0, 6)
 	if x, _ := tree.RQ(0, 6); x != (101 - 1000) {
 		t.Fatalf("happy case failed! should return -899; got: %d", x)
+	}
+	//check failure
+	if err := tree.Add(-100, -10, 10000); err == nil {
+		t.Error("should fail!")
 	}
 }
 
