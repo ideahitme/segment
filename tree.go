@@ -9,7 +9,7 @@ import (
 type Tree struct {
 	realSize  int      // real size of the array on which queries are performed
 	nodes     []int    // nodes stored in the tree. it is slice of size about ~2*realSize
-	lazyNodes []int    // stores intermidiate values on the tree for updates; for lazy propagation
+	lazyNodes []int    // stores intermediate values on the tree for updates; for lazy propagation
 	treeFunc  TreeFunc // defines the type of queries supported
 }
 
@@ -108,7 +108,7 @@ func (t *Tree) applyLazyPropagate(curNode int) {
 }
 
 // calculateTreeSize returns the size of the supplementary array storing
-// intermidiate nodes and values, roughly equal to ~ 2*x - 1, where
+// intermediate nodes and values, roughly equal to ~ 2*x - 1, where
 // x is the size of the original array being operated on
 func calculateTreeSize(x int) int {
 	logX := math.Log2(float64(x))

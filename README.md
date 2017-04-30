@@ -1,5 +1,7 @@
 # Segment Tree
 
+[![Coverage Status](https://coveralls.io/repos/github/ideahitme/segment/badge.svg?branch=master)](https://coveralls.io/github/ideahitme/segment?branch=master)
+
 Basic implementation of segment tree in **Go**
 
 Read more about segment tree: https://en.wikipedia.org/wiki/Segment_tree

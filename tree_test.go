@@ -142,37 +142,37 @@ func TestRQ(t *testing.T) {
 			title: "Range Minimum Query",
 			init:  []int{5, 2, 1, 52, 312, 1000, 4, 1, 3, 1, -10},
 			queries: []query{
-				query{
+				{
 					left:           0,
 					right:          0,
 					expectedAnswer: 5,
 				},
-				query{
+				{
 					left:           0,
 					right:          4,
 					expectedAnswer: 1,
 				},
-				query{
+				{
 					left:           0,
 					right:          10,
 					expectedAnswer: -10,
 				},
-				query{
+				{
 					left:           0,
 					right:          9,
 					expectedAnswer: 1,
 				},
-				query{
+				{
 					left:           3,
 					right:          5,
 					expectedAnswer: 52,
 				},
-				query{
+				{
 					left:        -1,
 					right:       10,
 					expectError: true,
 				},
-				query{
+				{
 					left:        5,
 					right:       2,
 					expectError: true,
@@ -184,27 +184,27 @@ func TestRQ(t *testing.T) {
 			title: "Range Maximum Query",
 			init:  []int{5, 2, 1, 52, 312, 1000, 4, 1, 3, 1, 10},
 			queries: []query{
-				query{
+				{
 					left:           0,
 					right:          0,
 					expectedAnswer: 5,
 				},
-				query{
+				{
 					left:           0,
 					right:          4,
 					expectedAnswer: 312,
 				},
-				query{
+				{
 					left:           0,
 					right:          10,
 					expectedAnswer: 1000,
 				},
-				query{
+				{
 					left:           0,
 					right:          9,
 					expectedAnswer: 1000,
 				},
-				query{
+				{
 					left:           6,
 					right:          8,
 					expectedAnswer: 4,
