@@ -1,0 +1,15 @@
+dist: trusty
+
+os:
+- linux
+
+language: go
+
+go:
+- 1.8
+
+before_install:
+- go get github.com/mattn/goveralls
+
+script:
+- travis_wait 20 goveralls -service=travis-ci
