@@ -44,7 +44,7 @@ func TestCalculateTreeSize(t *testing.T) {
 	}
 }
 
-func ExampleReadme() {
+func ExampleReadmeRQ() {
 	x := []int{1, 20, 3, 40, 5, 60, 7, -100} // our original array
 	tree, _ := NewTree(x, MaxFunc{})         // segment tree which supports Range Maximum Queries
 
@@ -60,16 +60,68 @@ func ExampleReadme() {
 	//60 <nil>
 	//7 <nil>
 	//-100 <nil>
+
+}
+
+func ExampleReadmeAdd() {
+	x := []int{1, 20, 3, 40, 5, 60, 7, -100} // our original array
+	tree, _ := NewTree(x, MaxFunc{})         // segment tree which supports Range Maximum Queries
+
+	fmt.Println(tree.RQ(0, 3))
+	tree.Add(5, 2, 4) //increase elements in [2:4] by 5
+	fmt.Println(tree.RQ(2, 4))
+	tree.Add(13, 2, 2) // increase element at 2 by 13
+	fmt.Println(tree.RQ(0, 2))
+	tree.Add(10000, 0, 7) // increase all by 10000
+	fmt.Println(tree.RQ(0, 7))
+
+	//Output:
+	//40 <nil>
+	//45 <nil>
+	//21 <nil>
+	//10060 <nil>
 }
 
 func TestHappyCase(t *testing.T) {
 	minTree, _ := NewTree([]int{100}, MinFunc{})
 	if x, _ := minTree.RQ(0, 0); x != 100 {
-		t.Fatal("happy case failed! should return 100")
+		t.Fatalf("happy case failed! should return 100; got: %d", x)
 	}
 	maxTree, _ := NewTree([]int{100}, MaxFunc{})
 	if x, _ := maxTree.RQ(0, 0); x != 100 {
-		t.Fatal("happy case failed! should return 100")
+		t.Fatalf("happy case failed! should return 100; got: %d", x)
+	}
+
+	tree, _ := NewTree([]int{1, 2, 3, 4, 5, 6, 7}, MinFunc{})
+	if x, _ := tree.RQ(0, 0); x != 1 {
+		t.Fatalf("happy case failed! should return 1; got: %d", x)
+	}
+	tree.Add(100, 0, 0)
+	if x, _ := tree.RQ(0, 0); x != 101 {
+		t.Fatalf("happy case failed! should return 101; got: %d", x)
+	}
+	if x, _ := tree.RQ(0, 1); x != 2 {
+		t.Fatalf("happy case failed! should return 2; got: %d", x)
+	}
+	tree.Add(100, 1, 6)
+	if x, _ := tree.RQ(0, 6); x != 101 {
+		t.Fatalf("happy case failed! should return 101; got: %d", x)
+	}
+	tree.Add(-100, 6, 6)
+	if x, _ := tree.RQ(0, 6); x != 7 {
+		t.Fatalf("happy case failed! should return 7; got: %d", x)
+	}
+	tree.Add(-100, 2, 5)
+	if x, _ := tree.RQ(0, 6); x != 3 {
+		t.Fatalf("happy case failed! should return 3; got: %d", x)
+	}
+	tree.Add(101, 1, 6)
+	if x, _ := tree.RQ(0, 6); x != 101 {
+		t.Fatalf("happy case failed! should return 101; got: %d", x)
+	}
+	tree.Add(-1000, 0, 6)
+	if x, _ := tree.RQ(0, 6); x != (101 - 1000) {
+		t.Fatalf("happy case failed! should return -899; got: %d", x)
 	}
 }
 

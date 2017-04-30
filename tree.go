@@ -7,9 +7,10 @@ import (
 
 // Tree segment tree implementation
 type Tree struct {
-	realSize int
-	nodes    []int //nodes stored in the tree
-	treeFunc TreeFunc
+	realSize  int      // real size of the array on which queries are performed
+	nodes     []int    // nodes stored in the tree. it is slice of size about ~2*realSize
+	lazyNodes []int    // stores intermidiate values on the tree for updates; for lazy propagation
+	treeFunc  TreeFunc // defines the type of queries supported
 }
 
 // NewTree returns Tree object
@@ -22,9 +23,10 @@ func NewTree(x []int, fn TreeFunc) (*Tree, error) {
 	//determine number of nodes
 	size := calculateTreeSize(len(x))
 	t := &Tree{
-		nodes:    make([]int, size),
-		treeFunc: fn,
-		realSize: len(x),
+		nodes:     make([]int, size),
+		lazyNodes: make([]int, size),
+		treeFunc:  fn,
+		realSize:  len(x),
 	}
 	t.init(0, 0, len(x)-1, x)
 	return t, nil
@@ -52,6 +54,7 @@ func (t *Tree) RQ(left, right int) (int, error) {
 
 // callRQ recursively calculates the answer to range query
 func (t *Tree) callRQ(curNode, rangeLeft, rangeRight, curLeft, curRight int) int {
+	t.applyLazyPropagate(curNode) // respect range update
 	if curLeft > rangeRight || curRight < rangeLeft {
 		return t.treeFunc.Outlier()
 	}
@@ -65,9 +68,48 @@ func (t *Tree) callRQ(curNode, rangeLeft, rangeRight, curLeft, curRight int) int
 	)
 }
 
+// Add increments all numbers in the range [l:r] by x
+func (t *Tree) Add(x, left, right int) error {
+	if left > right || left < 0 || right >= t.realSize {
+		return errors.New("range out of bonds")
+	}
+	t.callAdd(0, left, right, 0, t.realSize-1, x)
+	return nil
+}
+
+// callAdd recursively adds `x` to all numbers in [rangeLeft:rangeRight]
+func (t *Tree) callAdd(curNode, rangeLeft, rangeRight, curLeft, curRight, x int) {
+	t.applyLazyPropagate(curNode)
+	if curLeft > rangeRight || curRight < rangeLeft {
+		return
+	}
+	if curLeft >= rangeLeft && curRight <= rangeRight {
+		t.lazyNodes[curNode] += x
+		t.applyLazyPropagate(curNode)
+		return
+	}
+	middle := (curLeft + curRight) / 2
+	t.callAdd(2*curNode+1, rangeLeft, rangeRight, curLeft, middle, x)
+	t.callAdd(2*curNode+2, rangeLeft, rangeRight, middle+1, curRight, x)
+	t.nodes[curNode] = t.treeFunc.Select(
+		t.nodes[2*curNode+1],
+		t.nodes[2*curNode+2],
+	)
+}
+
+// applyLazyPropagate applies and propagates whatever is stored in the lazy node
+func (t *Tree) applyLazyPropagate(curNode int) {
+	t.nodes[curNode] += t.lazyNodes[curNode]
+	if 2*curNode+2 < len(t.lazyNodes) {
+		t.lazyNodes[2*curNode+1] += t.lazyNodes[curNode]
+		t.lazyNodes[2*curNode+2] += t.lazyNodes[curNode]
+	}
+	t.lazyNodes[curNode] = 0
+}
+
 // calculateTreeSize returns the size of the supplementary array storing
 // intermidiate nodes and values, roughly equal to ~ 2*x - 1, where
-// x is the size of the original array being
+// x is the size of the original array being operated on
 func calculateTreeSize(x int) int {
 	logX := math.Log2(float64(x))
 	ceilLogX := uint(math.Ceil(logX))
@@ -76,8 +118,8 @@ func calculateTreeSize(x int) int {
 
 // TreeFunc interface defines the type of queries to be performed on the tree
 type TreeFunc interface {
-	Outlier() int
-	Select(x, y int) int
+	Outlier() int        //should return value which can be discarded when passed to Select
+	Select(x, y int) int //should return selected value among two integers
 }
 
 // MinFunc implements TreeFunc and supports Range Minimum Query
