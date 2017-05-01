@@ -9,6 +9,34 @@ Read more about segment tree: https://en.wikipedia.org/wiki/Segment_tree
 
 All operations (see below) are `O(log(n))` where `n` is the size of the array on which queries are performed.
 
+## Basic 
+
+```
+package main
+
+import "github.com/ideahitme/segment"
+
+func main() {
+	tree, err := segment.NewTree([]int{1,2,3,4,5}, MinFunc{})
+	if err != nil { 
+		//handle error, only happens when empty slice is passed
+	}
+
+	// minimum value in range [0:4]
+	fmt.Println(tree.RQ(0, 4)) // 1, <nil>
+
+	// increase values in range [1:4] by -5
+	err := tree.Add(-5, 1, 4)
+	if err != nil { 
+		//handle error, only happens when ranges are incorrect
+	}
+
+	// so now we have array of [1, -3, -2, -1, 0]
+	fmt.Println(tree.RQ(0, 2)) // -3, <nil>
+}
+
+```
+
 ## API
 
 ### `NewTree(x []int, TreeFunc)`
