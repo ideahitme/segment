@@ -96,3 +96,8 @@ func main() {
 ```
 
 More functionalities and their examples coming soon...
+
+## TODOs
+
+1. Make it work for other types, at least in64 and float64
+2. Create Benchmarks
