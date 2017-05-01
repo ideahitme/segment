@@ -60,7 +60,7 @@ func main() {
 ### `RQ(l, r)`: range queries on range `[l:r]`
 ```
 	x := []int{1, 20, 3, 40, 5, 60, 7, -100} // our original array
-	tree, _ := segment.NewTree(x, MaxFunc{}) // segment tree which supports Range Maximum Queries
+	tree, _ := segment.NewTree(x, segment.MaxFunc{}) // segment tree which supports Range Maximum Queries
 
 	fmt.Println(tree.RQ(0, 0))
 	fmt.Println(tree.RQ(0, 3))
