@@ -100,7 +100,23 @@ func main() {
 
 More functionalities and their examples coming soon...
 
+## Benchmark
+
+Naive approach vs Segment Tree
+
+```
+BenchmarkNaive2-4                   5000            370691 ns/op
+BenchmarkNaive100-4                 2000            959208 ns/op
+BenchmarkNaive10000-4                 20          90091228 ns/op
+BenchmarkNaive100000-4                 1        1003322923 ns/op
+BenchmarkTree2-4                    2000            828003 ns/op
+BenchmarkTree100-4                   300           4318972 ns/op
+BenchmarkTree10000-4                 100          12195815 ns/op
+BenchmarkTree100000-4                100          15319705 ns/op
+
+```
+
 ## TODOs
 
 1. Make it work for other types, at least in64 and float64
-2. Create Benchmarks
+2. More/better Benchmarks

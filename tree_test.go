@@ -306,3 +306,121 @@ func TestRQ(t *testing.T) {
 		})
 	}
 }
+
+// Benchmarks
+
+var sizes = []int{2, 100, 10000, 100000}
+var randomData = map[int][]int{}
+var trees = map[int]*Tree{}
+var rqueries = map[int][]rangeQuery{}
+var addqueries = map[int][]addQuery{}
+
+type rangeQuery struct {
+	left  int
+	right int
+}
+
+type addQuery struct {
+	left  int
+	right int
+	delta int
+}
+
+func init() {
+	for _, size := range sizes {
+		populate(size)
+	}
+}
+
+func populate(size int) {
+	if _, ok := randomData[size]; !ok {
+		x := make([]int, size)
+		for i := 0; i < size; i++ {
+			x[i] = int(rand.Int31n(1000000))
+		}
+		randomData[size] = x
+		trees[size], _ = NewTree(x, MinFunc{})
+	}
+	if _, ok := rqueries[size]; !ok {
+		queries := make([]rangeQuery, 10000)
+		l := rand.Intn(size / 2)
+		r := l + rand.Intn(size-l)
+		for i := 0; i < 10000; i++ {
+			queries[i] = rangeQuery{left: l, right: r}
+		}
+		rqueries[size] = queries
+	}
+	if _, ok := addqueries[size]; !ok {
+		queries := make([]addQuery, 10000)
+		l := rand.Intn(size / 2)
+		r := l + rand.Intn(size-l)
+		delta := rand.Intn(1000)
+		for i := 0; i < 10000; i++ {
+			queries[i] = addQuery{left: l, right: r, delta: delta}
+		}
+		addqueries[size] = queries
+	}
+}
+
+func benchmarkNaive(size int) {
+	x := randomData[size]
+	for i := range rqueries[size] {
+		findMinimum(x, rqueries[size][i].left, rqueries[size][i].right)
+		addRange(x, addqueries[size][i].left, addqueries[size][i].right, addqueries[size][i].delta)
+	}
+}
+
+func benchmarkTree(size int) {
+	for i := range rqueries[size] {
+		trees[size].RQ(rqueries[size][i].left, rqueries[size][i].right)
+		trees[size].Add(addqueries[size][i].delta, addqueries[size][i].left, addqueries[size][i].right)
+	}
+}
+
+func BenchmarkNaive2(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		benchmarkNaive(2)
+	}
+}
+
+func BenchmarkNaive100(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		benchmarkNaive(100)
+	}
+}
+
+func BenchmarkNaive10000(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		benchmarkNaive(10000)
+	}
+}
+
+func BenchmarkNaive100000(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		benchmarkNaive(100000)
+	}
+}
+
+func BenchmarkTree2(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		benchmarkTree(2)
+	}
+}
+
+func BenchmarkTree100(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		benchmarkTree(100)
+	}
+}
+
+func BenchmarkTree10000(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		benchmarkTree(10000)
+	}
+}
+
+func BenchmarkTree100000(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		benchmarkTree(100000)
+	}
+}
