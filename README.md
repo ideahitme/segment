@@ -38,6 +38,9 @@ func main() {
 
 ```
 
+**NOTE**: Slice passed to the tree is internally copied, therefore can be safely modified
+
+
 ## API
 
 ### `NewTree(x []int, TreeFunc)`

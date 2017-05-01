@@ -1,9 +1,119 @@
 package segment
 
-import "testing"
+import (
+	"math"
+	"math/rand"
+	"testing"
+	"time"
+)
 
 var _ TreeFunc = MinFunc{}
 var _ TreeFunc = MaxFunc{}
+
+func TestExtensive(t *testing.T) {
+	//randomized extensive testing
+	rand.Seed(time.Now().UnixNano())
+
+	for tc := 0; tc < 10; tc++ { //10 cases of RQ
+		//generate large slice 50k+ size
+		size := 50000 + rand.Intn(50*1000)
+		x := make([]int, size)
+		y := make([]int, size)
+		for i := 0; i < size; i++ {
+			x[i] = int(rand.Int31n(1000000))
+			y[i] = x[i]
+		}
+
+		maxTree, _ := NewTree(x, MaxFunc{})
+		//at least 100 queries
+		for k := 0; k < 100; k++ {
+			l := rand.Intn(size)
+			r := l + rand.Intn(size-l)
+			if res, _ := maxTree.RQ(l, r); res != findMaximum(x, l, r) {
+				t.Fatal("incorrect result!")
+			}
+		}
+
+		minTree, _ := NewTree(y, MinFunc{})
+		// at least 100 queries
+		for k := 0; k < 100; k++ {
+			l := rand.Intn(size)
+			r := l + rand.Intn(size-l)
+			if res, _ := minTree.RQ(l, r); res != findMinimum(y, l, r) {
+				t.Fatal("incorrect result!")
+			}
+		}
+	}
+
+	for tc := 0; tc < 10; tc++ { //10 cases of RQ && Add
+		//generate large slice 50k+ size
+		size := 50000 + rand.Intn(50*1000)
+		x := make([]int, size)
+		y := make([]int, size)
+		for i := 0; i < size; i++ {
+			x[i] = int(rand.Int31n(1000000))
+			y[i] = x[i]
+		}
+
+		maxTree, _ := NewTree(x, MaxFunc{})
+		//at least 10 queries
+		for k := 0; k < 10; k++ {
+			l := rand.Intn(size)
+			r := l + rand.Intn(size-l)
+			delta := rand.Intn(1000)
+			maxTree.Add(delta, l, r)
+			addRange(x, l, r, delta)
+
+			newl := rand.Intn(size)
+			newr := newl + rand.Intn(size-newl)
+			if res, _ := maxTree.RQ(newl, newr); res != findMaximum(x, newl, newr) {
+				t.Fatal("incorrect result!")
+			}
+		}
+
+		minTree, _ := NewTree(y, MinFunc{})
+		// at least 10 queries
+		for k := 0; k < 10; k++ {
+			l := rand.Intn(size)
+			r := l + rand.Intn(size-l)
+			delta := rand.Intn(1000)
+			minTree.Add(delta, l, r)
+			addRange(y, l, r, delta)
+
+			newl := rand.Intn(size)
+			newr := newl + rand.Intn(size-newl)
+			if res, _ := minTree.RQ(newl, newr); res != findMinimum(y, newl, newr) {
+				t.Fatal("incorrect result!")
+			}
+		}
+	}
+}
+
+func findMinimum(x []int, l, r int) int {
+	curMin := math.MaxInt32
+	for i := l; i <= r; i++ {
+		if x[i] < curMin {
+			curMin = x[i]
+		}
+	}
+	return curMin
+}
+
+func findMaximum(x []int, l, r int) int {
+	curMax := math.MinInt32
+	for i := l; i <= r; i++ {
+		if x[i] > curMax {
+			curMax = x[i]
+		}
+	}
+	return curMax
+}
+
+func addRange(x []int, l, r, delta int) {
+	for i := l; i <= r; i++ {
+		x[i] += delta
+	}
+}
 
 func TestCalculateTreeSize(t *testing.T) {
 	for _, ti := range []struct {
