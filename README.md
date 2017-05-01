@@ -1,6 +1,7 @@
 # Segment Tree
 
 [![Coverage Status](https://coveralls.io/repos/github/ideahitme/segment/badge.svg?branch=master)](https://coveralls.io/github/ideahitme/segment?branch=master)
+[![Go Report Card](https://goreportcard.com/badge/github.com/ideahitme/segment)](https://goreportcard.com/report/github.com/ideahitme/segment)
 
 Basic implementation of segment tree in **Go**
 

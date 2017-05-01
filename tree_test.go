@@ -44,7 +44,7 @@ func TestCalculateTreeSize(t *testing.T) {
 	}
 }
 
-func ExampleRQ() {
+func ExampleTreeRQ() {
 	x := []int{1, 20, 3, 40, 5, 60, 7, -100} // our original array
 	tree, _ := NewTree(x, MaxFunc{})         // segment tree which supports Range Maximum Queries
 
@@ -63,7 +63,7 @@ func ExampleRQ() {
 
 }
 
-func ExampleAdd() {
+func ExampleTreeAdd() {
 	x := []int{1, 20, 3, 40, 5, 60, 7, -100} // our original array
 	tree, _ := NewTree(x, MaxFunc{})         // segment tree which supports Range Maximum Queries
 
