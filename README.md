@@ -18,7 +18,7 @@ package main
 import "github.com/ideahitme/segment"
 
 func main() {
-	tree, err := segment.NewTree([]int{1,2,3,4,5}, MinFunc{})
+	tree, err := segment.NewTree([]int{1,2,3,4,5}, segment.MinFunc{})
 	if err != nil { 
 		//handle error, only happens when empty slice is passed
 	}
