@@ -1,5 +1,6 @@
 # Segment Tree
 
+[![Build Status](https://travis-ci.org/ideahitme/segment.svg?branch=master)](https://travis-ci.org/ideahitme/segment)
 [![Coverage Status](https://coveralls.io/repos/github/ideahitme/segment/badge.svg?branch=master)](https://coveralls.io/github/ideahitme/segment?branch=master)
 [![Go Report Card](https://goreportcard.com/badge/github.com/ideahitme/segment)](https://goreportcard.com/report/github.com/ideahitme/segment)
 
@@ -9,7 +10,7 @@ Read more about segment tree: https://en.wikipedia.org/wiki/Segment_tree
 
 All operations (see below) are `O(log(n))` where `n` is the size of the array on which queries are performed.
 
-## Basic 
+## Basic Usage
 
 ```
 package main
