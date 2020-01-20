@@ -118,5 +118,5 @@ BenchmarkTree100000-4                100          15319705 ns/op
 
 ## TODOs
 
-1. Make it work for other types, at least in64 and float64
+1. Make it work for other types, at least int64 and float64
 2. More/better Benchmarks
